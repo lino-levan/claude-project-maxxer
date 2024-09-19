@@ -1,31 +1,27 @@
-import { walkSync } from "jsr:@std/fs/walk";
+import { expandGlobSync } from "jsr:@std/fs/expand-glob";
 import { debounce } from "jsr:@std/async/debounce";
 import { getProjectDocs } from "./get_project_docs.ts";
 import { uploadAndDeduplicateProjectDocs } from "./upload_to_project_docs.ts";
 import { deleteProjectDoc } from "./delete_project_doc.ts";
 
-const watchedDirectories = [
-  "routes/",
-  "islands/",
-  "components/",
-  "lib/",
-];
+const watched = ["**/*.{ts,tsx,js,jsx,md,json}"];
+const ignored = ["**/node_modules/**", "claude_maxxer.json"]
 
 const projectDocs = await getProjectDocs();
 
 // Upload all files in the watched directories to the project docs
 async function uploadAllFiles() {
-  for (const directory of watchedDirectories) {
-    const files = walkSync(directory, {
-      includeFiles: true,
+  for (const glob of watched) {
+    const files = expandGlobSync(glob, {
+      exclude: ignored,
       includeDirs: false,
-      includeSymlinks: false,
-      exts: ["ts", "tsx", "js", "jsx", "md", "json"],
+      followSymlinks: true,
     });
     for (const file of files) {
+      const shortPath = file.path.split(Deno.cwd() + "/").pop() as string;
       await uploadAndDeduplicateProjectDocs(
         projectDocs,
-        file.path,
+        shortPath,
         Deno.readTextFileSync(file.path),
       );
     }
@@ -50,12 +46,12 @@ await uploadAllFiles();
 
 // Listen to file changes in the `routes/`, `islands/`, `components/`, and `lib/` directories
 // and upload new files to the project docs
-const watcher = Deno.watchFs(watchedDirectories, { recursive: true });
+const watcher = Deno.watchFs(".", { recursive: true });
 
 const onChange = debounce(async () => {
   await uploadAllFiles();
 }, 1000);
 
-for await (const event of watcher) {
+for await (const _ of watcher) {
   onChange();
 }
