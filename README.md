@@ -1,6 +1,7 @@
 # Claude Project Maxxer
 
-Automatically update claude project files from your fresh deno project. Yippee. This only works in deno fresh projects. Nothing else.
+Automatically update claude project files from your fresh deno project. Yippee.
+This only works in deno fresh projects. Nothing else.
 
 ## Usage
 
@@ -10,7 +11,8 @@ Clone this, cd into that directory, then install the package globally:
 deno install -gfA main.ts
 ```
 
-To use it make a JSON file in the root of your project called `claude_maxxer.json` with the following format:
+To use it make a JSON file in the root of your project called
+`claude_maxxer.json` with the following format:
 
 ```json
 {
@@ -20,4 +22,5 @@ To use it make a JSON file in the root of your project called `claude_maxxer.jso
 }
 ```
 
-Boom, done. Now you can run `claude-project-maxxer` in your project and it will update the project files in the claude project.
+Boom, done. Now you can run `claude-project-maxxer` in your project and it will
+update the project files in the claude project.

@@ -4,8 +4,8 @@ import { getProjectDocs } from "./get_project_docs.ts";
 import { uploadAndDeduplicateProjectDocs } from "./upload_to_project_docs.ts";
 import { deleteProjectDoc } from "./delete_project_doc.ts";
 
-const watched = ["**/*.{ts,tsx,js,jsx,md,json}"];
-const ignored = ["**/node_modules/**", "claude_maxxer.json"]
+const watched = ["**/*.{ts,tsx,js,jsx,md,json,css}"];
+const ignored = ["**/node_modules/**", "claude_maxxer.json"];
 
 const projectDocs = await getProjectDocs();
 
@@ -26,14 +26,13 @@ async function uploadAllFiles() {
       );
     }
   }
-  
+
   // If there are files that were deleted, remove them from the project docs
   for (let i = projectDocs.length - 1; i >= 0; i--) {
     const doc = projectDocs[i];
     try {
       Deno.statSync(doc.file_name);
-    }
-    catch {
+    } catch {
       console.log(
         `[${new Date().toISOString()}] Deleting project doc: ${doc.file_name}`,
       );
