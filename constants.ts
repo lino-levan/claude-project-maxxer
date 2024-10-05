@@ -4,4 +4,6 @@ export const {
   CLAUDE_ORGANIZATION,
   CLAUDE_PROJECT,
   CLAUDE_COOKIE,
+  WATCHED,
+  IGNORED,
 } = config;

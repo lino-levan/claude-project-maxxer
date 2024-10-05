@@ -3,9 +3,10 @@ import { debounce } from "jsr:@std/async/debounce";
 import { getProjectDocs } from "./get_project_docs.ts";
 import { uploadAndDeduplicateProjectDocs } from "./upload_to_project_docs.ts";
 import { deleteProjectDoc } from "./delete_project_doc.ts";
+import { WATCHED, IGNORED } from "./constants.ts";
 
-const watched = ["**/*.{ts,tsx,js,jsx,md,json,css}"];
-const ignored = ["**/node_modules/**", "claude_maxxer.json"];
+const watched = WATCHED ?? ["**/*.{ts,tsx,js,jsx,md,json,css}"];
+const ignored = IGNORED ?? ["**/node_modules/**", "**/.next/**", "claude_maxxer.json", "**/{package-lock.json,yarn.lock,pnpm-lock.yaml}"];
 
 const projectDocs = await getProjectDocs();
 
